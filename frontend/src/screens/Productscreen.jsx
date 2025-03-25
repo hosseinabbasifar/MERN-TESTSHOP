@@ -1,47 +1,30 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useGetProductsDetailQuery } from "../slices/productApiSlice";
+import { Link, useParams } from "react-router-dom";
 import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
-import axios from "axios";
-import { getProductById } from "../services/productService";
 
 const ProductScreen = () => {
-  // Get the product ID from the URL parameters
-  const { id: productId } = useParams();
-  // State to store the product data
-  const [product, setProduct] = useState({});
-  // State to manage loading state
-  const [loading, setLoading] = useState(true);
-  // State to manage error messages
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    // Function to fetch product data from the server
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        const data = await getProductById(productId);
-        setProduct(data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [productId]);
-
+  const { id:productId } = useParams(); // Get productId from URL
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductsDetailQuery(productId);
   return (
     <>
       <Link to="/" className="btn btn-light my-3">
         Go Back
       </Link>
-      {loading ? (
+      {isLoading ? (
         <h2>Loading...</h2>
       ) : error ? (
-        <h3>{error}</h3>
+        <h3>
+          {" "}
+          An error occurred while fetching product details:
+          {error?.data?.message || error.error}
+        </h3>
+      ) : !product ? (
+        <h3>No product found.</h3> // بررسی اینکه مقدار `product` وجود دارد
       ) : (
         <Row>
           <Col md={5}>
@@ -75,7 +58,6 @@ const ProductScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
-
                 <ListGroup.Item>
                   <Row>
                     <Col>Status:</Col>
@@ -84,7 +66,6 @@ const ProductScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
-
                 <ListGroup.Item>
                   <Button
                     className="btn-block"

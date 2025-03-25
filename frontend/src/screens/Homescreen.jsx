@@ -1,52 +1,31 @@
-import { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/product";
-import { fetchProducts } from "../services/productService";
+import { useGetProductsQuery } from "../slices/productApiSlice";
 
 const HomeScreen = () => {
-  // State to store the list of products
-  const [products, setProducts] = useState([]);
-  // State to manage loading state
-  const [loading, setLoading] = useState(true);
-  // State to handle error messages
-  const [error, setError] = useState("");
+  const { data: products, loading, error } = useGetProductsQuery();
 
-  useEffect(() => {
-    // Function to fetch products from the API
-    const getProducts = async () => {
-      try {
-        // Fetch products and update state
-        const data = await fetchProducts();
-        setProducts(data);
-        setLoading(false);
-      } catch (err) {
-        // Handle errors and update state
-        setError("Failed to fetch products");
-        setLoading(false);
-      }
-    };
-
-    // Call the function to fetch products
-    getProducts();
-  }, []);
+  if (error) {
+    console.error("Error fetching products:", error);
+  }
 
   return (
     <>
-      <h1>Latest Products</h1>
-      {/* Display loading message, error message, or the list of products . also
-      i will modify loading page later on*/}
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
-        <p>{error}</p>
+        <p>{error.message || "An error occurred"}</p>
       ) : (
-        <Row>
-          {products.map((item) => (
-            <Col key={item._id} sm={12} md={6} lg={4} xl={3}>
-              <Product product={item} />
-            </Col>
-          ))}
-        </Row>
+        <>
+          <h1>Latest Products</h1>
+          <Row>
+            {Array.isArray(products) && products.map((item) => (
+              <Col key={item._id} sm={12} md={6} lg={4} xl={3}>
+                <Product product={item} />
+              </Col>
+            ))}
+          </Row>
+        </>
       )}
     </>
   );
