@@ -4,7 +4,7 @@ import { useGetProductsQuery } from "../slices/productApiSlice";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 const HomeScreen = () => {
-  const { data: products = [], loading, error } = useGetProductsQuery();
+  const { data: products = [], isLoading, error } = useGetProductsQuery();
 
   if (error) {
     console.error("Error fetching products:", error);
@@ -12,7 +12,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : error ? (
         <Message variant={"danger"}>

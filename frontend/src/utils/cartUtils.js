@@ -3,11 +3,7 @@ export const addDecimals = (num) => {
 };
 
 export const updateCart = (state, item) => {
-  // // Ensure state and cartItems are valid
-  // if (!state || !state.cartItems) {
-  //   console.error("Invalid state passed to updateCart");
-  //   return state;
-  // }
+
 
   // If item is provided, handle updates (e.g., adding or updating an item)
   if (item) {
