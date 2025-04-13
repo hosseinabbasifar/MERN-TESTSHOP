@@ -5,6 +5,7 @@ import productRoutes from "./routes/productRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -17,8 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
-
-
+console.log('Registering order routes at /api/orders');
+app.use("/api/orders", orderRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
