@@ -10,26 +10,26 @@ const ShippingScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
-
-  const [address, setAddress] = useState(shippingAddress.address || '');
-  const [city, setCity] = useState(shippingAddress.city || '');
+  const [address, setAddress] = useState(shippingAddress.address || "");
+  const [city, setCity] = useState(shippingAddress.city || "");
   const [postalCode, setPostalCode] = useState(
-    shippingAddress.postalCode || ''
+    shippingAddress.postalCode || ""
   );
-  const [country, setCountry] = useState(shippingAddress.country || '');
+  const [country, setCountry] = useState(shippingAddress.country || "");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(address, city, postalCode, country);
     dispatch(saveShippingAddress({ address, city, postalCode, country }));
     navigate("/payment");
   };
 
   return (
     <FormContainer>
-    <CheckoutSteps step1 step2 step3 step4/>
+      <CheckoutSteps step1 step2 step3 step4 />
       <h1>Shipping</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group className="my-2" controlId="address">
