@@ -113,7 +113,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-  console.log(req.body);
+
 
   res.send("get users");
 });

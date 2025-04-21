@@ -7,7 +7,6 @@ import {
   usePayOrderMutation,
 } from "../slices/orderApiSlice";
 import { toast } from "react-toastify";
-import { PayPalButtons } from "@paypal/react-paypal-js";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -29,7 +28,7 @@ const OrderScreen = () => {
   ) : (
     <>
       <h1>Order {order._id}</h1>
-      <PayPalButtons></PayPalButtons>
+     
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
