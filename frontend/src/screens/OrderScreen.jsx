@@ -2,23 +2,44 @@ import { Link, useParams } from "react-router-dom";
 import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
+
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
+  useDeliverOrderMutation,
 } from "../slices/orderApiSlice";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
 
-  const { data: order, isLoading, error, refetch } = useGetOrderDetailsQuery(orderId);
+  const {
+    data: order,
+    isLoading,
+    error,
+    refetch,
+  } = useGetOrderDetailsQuery(orderId);
+
+  const { userInfo } = useSelector((state) => state.Auth);
+
   const [payOrder] = usePayOrderMutation();
+
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
 
   async function onApproveTest() {
     await payOrder({ orderId, details: { payer: {} } });
     refetch();
     toast.success("Order is paid");
   }
+
+  const deliverHandler = async () => {
+    await deliverOrder({ orderId });
+    refetch();
+    toast.success("Order is Delivered");
+  };
+
   return isLoading ? (
     <Loading />
   ) : error ? (
@@ -28,7 +49,7 @@ const OrderScreen = () => {
   ) : (
     <>
       <h1>Order {order._id}</h1>
-     
+
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
@@ -148,7 +169,22 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
-              {/* {MARK AS DELIVERED PLACEHOLDER} */}
+
+              {loadingDeliver && <Loading />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
