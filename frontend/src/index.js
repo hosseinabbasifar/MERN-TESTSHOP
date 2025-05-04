@@ -20,6 +20,8 @@ import OrderScreen from "./screens/OrderScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AdminRoute from "./components/AdminRoute";
 import OrderListScreen from "./screens/OrderListScreen";
+import ProductListScreen from "./screens/ProductListScreen";
+import ProductFormScreen from "./screens/ProductFormScreen";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -46,7 +48,9 @@ const router = createBrowserRouter(
 
       <Route path="" element={<AdminRoute />}>
         <Route path="/admin/orderlist" element={<OrderListScreen />} />
-
+        <Route path="/admin/productlist" element={<ProductListScreen />} />
+        <Route path="/admin/product/:id/edit" element={<ProductFormScreen />} />
+        <Route path="/admin/product/create" element={<ProductFormScreen />} />
       </Route>
     </Route>
   )
@@ -56,7 +60,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );
