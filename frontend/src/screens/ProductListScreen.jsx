@@ -2,14 +2,30 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
-import { useGetProductsQuery } from "../slices/productApiSlice";
+import {
+  useGetProductsQuery,
+  useDeleteProductMutation,
+} from "../slices/productApiSlice";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const ProductListScreen = () => {
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const [deleteProduct, { isLoading: Loadingdelete }] =
+    useDeleteProductMutation();
 
   const navigate = useNavigate();
   const createProductHandler = () => {
     navigate("/admin/product/create");
+  };
+  const DeleteHandler = async (id) => {
+    if (window.confirm("Are you sure?")) {
+      try {
+        await deleteProduct(id).unwrap();
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
   };
 
   return (
@@ -24,7 +40,7 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
-
+      {Loadingdelete && <Loading />}
       {isLoading ? (
         <Loading />
       ) : error ? (
@@ -57,7 +73,10 @@ const ProductListScreen = () => {
                       </Button>
                     </NavLink>
                     <Button variant="danger" className="btn-sm">
-                      <FaTrash style={{ color: "white" }} />
+                      <FaTrash
+                        style={{ color: "white" }}
+                        onClick={() => DeleteHandler(product._id)}
+                      />
                     </Button>
                   </td>
                 </tr>

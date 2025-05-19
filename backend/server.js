@@ -6,9 +6,11 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import orderRoutes from "./routes/orderRoutes.js";
+import path from "path";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 dotenv.config();
-
+const __dirname = path.resolve();
 const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
@@ -19,6 +21,8 @@ app.use(cookieParser());
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.use(notFound);
 app.use(errorHandler);

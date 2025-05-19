@@ -4,10 +4,13 @@ import { Form, Button } from "react-bootstrap";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
 import FormContainer from "../components/FormContainer";
+import { toast } from "react-toastify";
+
 import {
   useGetProductsDetailQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useUploadProductImageMutation,
 } from "../slices/productApiSlice";
 
 const ProductFormScreen = () => {
@@ -37,6 +40,8 @@ const ProductFormScreen = () => {
     useCreateProductMutation();
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
+  const [uploadProductImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation();
 
   useEffect(() => {
     if (isEditMode && product) {
@@ -83,8 +88,25 @@ const ProductFormScreen = () => {
         await createProduct(formData).unwrap();
       }
       navigate("/admin/productlist");
-    } catch (error) {
-      console.error("Error saving product:", error);
+    } catch (err) {
+      toast.error(err?.data?.message || err?.error || "An error occurred");
+    }
+  };
+  const UploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      setFormData((prev) => ({ ...prev, image: res.image }));
+      toast.success("Image uploaded successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (err) {
+      toast.error(err?.data?.message || err?.error || "An error occurred");
     }
   };
 
@@ -95,7 +117,9 @@ const ProductFormScreen = () => {
       </Button>
       <h1>{isEditMode ? "Edit Product" : "Create Product"}</h1>
 
-      {(loadingProduct || loadingCreate || loadingUpdate) && <Loading />}
+      {(loadingProduct || loadingCreate || loadingUpdate || loadingUpload) && (
+        <Loading />
+      )}
       {errorProduct && (
         <Message variant="danger">
           {errorProduct?.data?.message || "An Error Happened"}
@@ -126,13 +150,13 @@ const ProductFormScreen = () => {
         </Form.Group>
 
         <Form.Group className="my-2" controlId="image">
-          <Form.Label>Image URL</Form.Label>
+          <Form.Label>Image</Form.Label>
+
+         
           <Form.Control
-            type="text"
-            placeholder="Image URL"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
+            type="file"
+            onChange={UploadFileHandler}
+            disabled={loadingUpload}
           />
         </Form.Group>
 
