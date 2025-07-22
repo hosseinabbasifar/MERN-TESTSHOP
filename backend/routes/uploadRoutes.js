@@ -38,6 +38,7 @@ router.post("/", (req, res) => {
     if (err) {
       return res.status(400).send({ message: err.message });
     }
+    
 
     res.status(200).send({
       message: "Image uploaded successfully",
