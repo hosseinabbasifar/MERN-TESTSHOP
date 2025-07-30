@@ -32,11 +32,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getUsers: builder.query({
-      query: () => ({
+      query: ({ PageNumber }) => ({
         url: USERS_URL,
         method: 'GET',
         providesTags: ['User'],
         keepUnusedDataFor: 5,
+        params: { PageNumber },
       }),
     }),
     deleteUser: builder.mutation({
@@ -63,12 +64,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     createUser: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/users`, // <-- use /users for admin create
+        url: `${USERS_URL}/users`,
         method: 'POST',
         body: data,
         credentials: 'include', // ensure cookies are sent
       }),
       invalidatesTags: ['User'],
+    }),
+    getProfile: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/profile`,
+        method: 'GET',
+      }),
     }),
   }),
 });
@@ -83,4 +90,5 @@ export const {
   useGetUserDetailsQuery,
   useUpdateUserMutation,
   useCreateUserMutation,
+  useGetProfileQuery,
 } = userApiSlice;

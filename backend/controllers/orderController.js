@@ -1,5 +1,5 @@
-import asyncHandler from "../middleware/asyncHandler.js";
-import Order from "../models/orderModel.js";
+import asyncHandler from '../middleware/asyncHandler.js';
+import Order from '../models/orderModel.js';
 
 // @desc    Create new order
 // @route   GET /api/orders
@@ -17,7 +17,7 @@ const addOrders = asyncHandler(async (req, res) => {
 
   if (orderItems && orderItems.length === 0) {
     res.status(400);
-    throw new Error("No order items");
+    throw new Error('No order items');
   } else {
     const order = new Order({
       orderItems: orderItems.map((x) => ({
@@ -53,8 +53,8 @@ const getUserOrders = asyncHandler(async (req, res) => {
 // @access  Private
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate(
-    "user",
-    "name email"
+    'user',
+    'name email'
   );
 
   if (order) {
@@ -66,11 +66,11 @@ const getOrderById = asyncHandler(async (req, res) => {
       res.json(order);
     } else {
       res.status(401);
-      throw new Error("Not authorized to view this order");
+      throw new Error('Not authorized to view this order');
     }
   } else {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 });
 
@@ -82,7 +82,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 
   if (!order) {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 
   // // Verify order belongs to user or user is admin
@@ -135,7 +135,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
     res.json(updatedOrder);
   } else {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 });
 
@@ -143,8 +143,19 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access  Private/Admin
 const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate("user", "id name");
-  res.json(orders);
+  // const orders = await Order.find({}).populate("user", "id name");
+  // res.json(orders);
+  //implement pagination
+  const pageSize = 3; // Number of orders per page
+  const page = Number(req.query.PageNumber) || 1;
+
+  const count = await Order.countDocuments();
+  const orders = await Order.find()
+    .populate('user', 'id name')
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ orders, page, pages: Math.ceil(count / pageSize) });
 });
 
 export {

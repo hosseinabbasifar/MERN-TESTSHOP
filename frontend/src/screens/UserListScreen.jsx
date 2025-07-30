@@ -6,12 +6,16 @@ import {
   useGetUsersQuery,
   useDeleteUserMutation,
 } from '../slices/userApiSlice';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
+import Paginate from '../components/Paginate';
 
 const UserListScreen = () => {
-  const { data: users, isLoading, error, refetch } = useGetUsersQuery();
+  const { PageNumber } = useParams();
+  const { data, isLoading, isFetching, error, refetch } = useGetUsersQuery({
+    PageNumber,
+  });
   const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation();
 
   const navigate = useNavigate();
@@ -20,7 +24,7 @@ const UserListScreen = () => {
     navigate('/admin/users/create');
   };
 
-  const deleteHandler = async (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         await deleteUser(id).unwrap();
@@ -49,7 +53,7 @@ const UserListScreen = () => {
         </Col>
       </Row>
       {loadingDelete && <Loading />}
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <Loading />
       ) : error ? (
         <Message variant="danger">
@@ -68,7 +72,7 @@ const UserListScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {users?.map((user) => (
+              {data.users?.map((user) => (
                 <tr key={user._id}>
                   <td>{user._id}</td>
                   <td>{user.name}</td>
@@ -89,17 +93,23 @@ const UserListScreen = () => {
                       </Button>
                     </NavLink>
                     <Button
-                      variant="danger"
+                      variant="outline-danger"
                       className="btn-sm"
-                      onClick={() => deleteHandler(user._id)}
+                      onClick={() => handleDelete(user._id)}
                     >
-                      <FaTrash style={{ color: 'white' }} />
+                      <FaTrash style={{ color: 'red' }} />
                     </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
+          <Paginate
+            pages={data.pages}
+            page={data.page}
+            isAdmin={true}
+            pageType="users"
+          />
         </>
       )}
     </>

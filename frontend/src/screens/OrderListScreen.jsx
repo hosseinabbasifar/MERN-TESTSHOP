@@ -1,17 +1,21 @@
-import { Table, Button } from "react-bootstrap";
-import { FaTimes } from "react-icons/fa";
-import Message from "../components/Message";
-import Loading from "../components/Loading";
-import { useGetOrdersQuery } from "../slices/orderApiSlice";
-import { NavLink } from "react-router-dom";
+import { Table, Button } from 'react-bootstrap';
+import { FaTimes } from 'react-icons/fa';
+import Message from '../components/Message';
+import Loading from '../components/Loading';
+import { useGetOrdersQuery } from '../slices/orderApiSlice';
+import { NavLink, useParams } from 'react-router-dom';
+import Paginate from '../components/Paginate';
 
 const OrderListScreen = () => {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const { PageNumber } = useParams();
+  const { data, isLoading, error, isFetching } = useGetOrdersQuery({
+    PageNumber,
+  });
 
   return (
     <>
       <h1>Orders</h1>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <Loading />
       ) : error ? (
         <Message variant="danger">
@@ -31,7 +35,7 @@ const OrderListScreen = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {data.orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
@@ -41,14 +45,14 @@ const OrderListScreen = () => {
                   {order.isPaid ? (
                     order.paidAt.substring(0, 10)
                   ) : (
-                    <FaTimes style={{ color: "red" }} />
+                    <FaTimes style={{ color: 'red' }} />
                   )}
                 </td>
                 <td>
                   {order.isDelivered ? (
                     order.deliveredAt.substring(0, 10)
                   ) : (
-                    <FaTimes style={{ color: "red" }} />
+                    <FaTimes style={{ color: 'red' }} />
                   )}
                 </td>
                 <td>
@@ -63,6 +67,12 @@ const OrderListScreen = () => {
           </tbody>
         </Table>
       )}
+      <Paginate
+        pages={data.pages}
+        page={data.page}
+        isAdmin={true}
+        pageType="orders"
+      />
     </>
   );
 };

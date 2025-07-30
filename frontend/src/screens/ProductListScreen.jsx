@@ -1,24 +1,29 @@
-import { Table, Button, Row, Col } from "react-bootstrap";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import Message from "../components/Message";
-import Loading from "../components/Loading";
+import { Table, Button, Row, Col } from 'react-bootstrap';
+import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
+import Message from '../components/Message';
+import Loading from '../components/Loading';
 import {
   useGetProductsQuery,
   useDeleteProductMutation,
-} from "../slices/productApiSlice";
-import { NavLink, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+} from '../slices/productApiSlice';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+import Paginate from '../components/Paginate';
 const ProductListScreen = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { PageNumber } = useParams();
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    PageNumber,
+  });
   const [deleteProduct, { isLoading: Loadingdelete }] =
     useDeleteProductMutation();
 
   const navigate = useNavigate();
   const createProductHandler = () => {
-    navigate("/admin/product/create");
+    navigate('/admin/product/create');
   };
   const DeleteHandler = async (id) => {
-    if (window.confirm("Are you sure?")) {
+    if (window.confirm('Are you sure?')) {
       try {
         await deleteProduct(id).unwrap();
         refetch();
@@ -59,7 +64,7 @@ const ProductListScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {data.products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -72,9 +77,9 @@ const ProductListScreen = () => {
                         <FaEdit />
                       </Button>
                     </NavLink>
-                    <Button variant="danger" className="btn-sm">
+                    <Button variant="outline-danger" className="btn-sm">
                       <FaTrash
-                        style={{ color: "white" }}
+                        style={{ color: 'red' }}
                         onClick={() => DeleteHandler(product._id)}
                       />
                     </Button>
@@ -83,6 +88,7 @@ const ProductListScreen = () => {
               ))}
             </tbody>
           </Table>
+          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
         </>
       )}
     </>

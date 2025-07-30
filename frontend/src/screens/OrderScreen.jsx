@@ -1,15 +1,15 @@
-import { Link, useParams } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
-import Message from "../components/Message";
-import Loading from "../components/Loading";
+import { Link, useParams } from 'react-router-dom';
+import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
+import Message from '../components/Message';
+import Loading from '../components/Loading';
 
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useDeliverOrderMutation,
-} from "../slices/orderApiSlice";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+} from '../slices/orderApiSlice';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -31,20 +31,20 @@ const OrderScreen = () => {
   async function onApproveTest() {
     await payOrder({ orderId, details: { payer: {} } });
     refetch();
-    toast.success("Order is paid");
+    toast.success('Order is paid');
   }
 
   const deliverHandler = async () => {
     await deliverOrder({ orderId });
     refetch();
-    toast.success("Order is Delivered");
+    toast.success('Order is Delivered');
   };
 
   return isLoading ? (
     <Loading />
   ) : error ? (
     <Message variant="danger">
-      {error?.data?.message || error?.error || "An error occurred"}
+      {error?.data?.message || error?.error || 'An error occurred'}
     </Message>
   ) : (
     <>
@@ -59,13 +59,13 @@ const OrderScreen = () => {
                 <strong>Name: </strong> {order.user.name}
               </p>
               <p>
-                <strong>Email: </strong>{" "}
+                <strong>Email: </strong>{' '}
                 <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
               </p>
               <p>
                 <strong>Address:</strong>
-                {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
-                {order.shippingAddress.postalCode},{" "}
+                {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
+                {order.shippingAddress.postalCode},{' '}
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
@@ -160,7 +160,7 @@ const OrderScreen = () => {
                   ) : (
                     <div>
                       <Button
-                        style={{ marginBottom: "10px" }}
+                        style={{ marginBottom: '10px' }}
                         onClick={onApproveTest}
                       >
                         Test Pay Order

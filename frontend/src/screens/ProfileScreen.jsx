@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Table, Form, Button, Row, Col } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import Message from "../components/Message";
-import Loading from "../components/Loading";
-import { useProfileMutation } from "../slices/userApiSlice";
-import { useGetUserOrdersQuery } from "../slices/orderApiSlice";
-import { setCredentials } from "../slices/authSlice";
+import React, { useEffect, useState } from 'react';
+import { Table, Form, Button, Row, Col } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Message from '../components/Message';
+import Loading from '../components/Loading';
+import { useProfileMutation } from '../slices/userApiSlice';
+import { useGetUserOrdersQuery } from '../slices/orderApiSlice';
+import { setCredentials } from '../slices/authSlice';
 
 const ProfileScreen = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const { userInfo } = useSelector((state) => state.Auth);
 
-    const { data: orders, isLoading, error } = useGetUserOrdersQuery();
+  const { data: orders, isLoading, error } = useGetUserOrdersQuery();
 
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
@@ -32,7 +32,7 @@ const ProfileScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error('Passwords do not match');
     } else {
       try {
         const res = await updateProfile({
@@ -43,7 +43,7 @@ const ProfileScreen = () => {
         }).unwrap();
         dispatch(setCredentials({ ...res }));
 
-        toast.success("Profile updated successfully");
+        toast.success('Profile updated successfully');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -106,8 +106,8 @@ const ProfileScreen = () => {
         </Form>
       </Col>
       <Col md={9}>
-         <h2>My Orders</h2>
-         {isLoading ? (
+        <h2>My Orders</h2>
+        {isLoading ? (
           <Loading />
         ) : error ? (
           <Message variant="danger">
@@ -135,14 +135,14 @@ const ProfileScreen = () => {
                     {order.isPaid ? (
                       order.paidAt.substring(0, 10)
                     ) : (
-                      <FaTimes style={{ color: "red" }} />
+                      <FaTimes style={{ color: 'red' }} />
                     )}
                   </td>
                   <td>
                     {order.isDelivered ? (
                       order.deliveredAt.substring(0, 10)
                     ) : (
-                      <FaTimes style={{ color: "red" }} />
+                      <FaTimes style={{ color: 'red' }} />
                     )}
                   </td>
                   <td>
@@ -155,8 +155,8 @@ const ProfileScreen = () => {
                 </tr>
               ))}
             </tbody>
-          </Table> 
-         )} 
+          </Table>
+        )}
       </Col>
     </Row>
   );
