@@ -40,7 +40,7 @@ const ProductScreen = () => {
     navigate('/cart');
   };
 
-  const { userInfo } = useSelector((state) => state.Auth);
+  const { userInfo } = useSelector((state) => state.auth);
 
   const [createReview, { isLoading: loadingProductReview }] =
     useCreateReviewMutation();

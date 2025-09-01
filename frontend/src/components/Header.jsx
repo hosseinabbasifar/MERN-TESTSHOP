@@ -8,6 +8,8 @@ import { useLogoutMutation } from '../slices/userApiSlice';
 import { logout } from '../slices/authSlice';
 import { resetCart } from '../slices/cartSlice';
 import SearchBox from './SearchBox';
+import { useTheme } from '../utils/ThemeContext';
+import { Form } from 'react-bootstrap';
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -16,6 +18,8 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [logoutApiCall] = useLogoutMutation();
+
+  const { currentTheme, toggleTheme } = useTheme();
 
   const logoutHandler = async () => {
     try {
@@ -77,6 +81,18 @@ const Header = () => {
                   </NavDropdown.Item>
                 </NavDropdown>
               )}
+
+              {/* Theme switch in Bootstrap header */}
+              <Nav.Item className="d-flex align-items-center">
+                <Form.Switch
+                  type="switch"
+                  id="theme-switch"
+                  label={currentTheme === 'material-ui' ? 'MUI' : 'BS'}
+                  checked={currentTheme === 'material-ui'}
+                  onChange={toggleTheme}
+                  className="text-white"
+                />
+              </Nav.Item>
             </Nav>
           </Navbar.Collapse>
         </Container>

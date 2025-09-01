@@ -31,9 +31,16 @@ import {
   Route,
 } from 'react-router-dom';
 
+import { AppThemeProvider } from './utils/ThemeContext';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import materialUiTheme from './material-ui/styles/materialUiTheme';
+import RootLayout from './RootLayout';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route path="/" element={<RootLayout />}>
+     <Route path="/" element={<App />}/> 
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/page/:PageNumber" element={<HomeScreen />} />
       <Route path="/search/:keyword" element={<HomeScreen />} />
@@ -83,7 +90,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <AppThemeProvider>
+        <MuiThemeProvider theme={materialUiTheme}>
+          <CssBaseline />
+          <RouterProvider router={router} />
+        </MuiThemeProvider>
+      </AppThemeProvider>
     </Provider>
   </React.StrictMode>
 );

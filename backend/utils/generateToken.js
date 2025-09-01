@@ -10,7 +10,7 @@ const generateToken = (res, userId) => {
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
     sameSite: 'strict', // Prevent CSRF attacks
-    maxAge: 30 * 1000, // 30 seconds
+    maxAge: 60 *60* 1000, // 1 hour expiration
   });
 };
 

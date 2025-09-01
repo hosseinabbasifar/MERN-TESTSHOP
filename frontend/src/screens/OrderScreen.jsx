@@ -21,7 +21,7 @@ const OrderScreen = () => {
     refetch,
   } = useGetOrderDetailsQuery(orderId);
 
-  const { userInfo } = useSelector((state) => state.Auth);
+  const { userInfo } = useSelector((state) => state.auth);
 
   const [payOrder] = usePayOrderMutation();
 
