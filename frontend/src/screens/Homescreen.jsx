@@ -7,6 +7,10 @@ import {
 } from '@mui/material';
 import MuiProduct from '../material-ui/components/MuiProduct';
 import { useTheme } from '../utils/ThemeContext';
+import MuiMessage from '../material-ui/components/MuiMessage';
+import MuiLoading from '../material-ui/components/MuiLoading';
+import MuiProductCarousel from '../material-ui/components/MuiProductCarousel';
+import MuiPaginate from '../material-ui/components/MuiPaginate';
 
 //bootstrap
 import { Row, Col, Button } from 'react-bootstrap';
@@ -34,14 +38,14 @@ const HomeScreen = () => {
 
   const renderLoadingAndError = () => {
     if (isLoading || isFetching) {
-      return currentTheme === 'bootstrap' ? <Loading /> : <Loading />;
+      return currentTheme === 'bootstrap' ? <Loading /> : <MuiLoading />;
     }
     if (error) {
       const message = error?.data?.message || error.error;
       return currentTheme === 'bootstrap' ? (
         <Message variant="danger">{message}</Message>
       ) : (
-        <Message severity="error">{message}</Message>
+        <MuiMessage severity="error">{message}</MuiMessage>
       );
     }
     return null;
@@ -74,7 +78,6 @@ const HomeScreen = () => {
           </Message>
         ) : (
           <>
-            <h1>Latest Products</h1>
             <Row>
               {data.products.map((item) => (
                 <Col key={item._id} sm={12} md={6} lg={4} xl={3}>
@@ -94,10 +97,12 @@ const HomeScreen = () => {
   }
 
   return (
+    
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {!keyword ? (
         <Box sx={{ mb: 4 }}>
-          <ProductCarousel />
+          <MuiProductCarousel />
+           
         </Box>
       ) : (
         <MuiButton
@@ -109,13 +114,17 @@ const HomeScreen = () => {
         </MuiButton>
       )}
       {isLoading || isFetching ? (
-        <Loading />
+        <MuiLoading />
       ) : error ? (
-        <Message variant="error">{error?.data?.message || error.error}</Message>
+        <MuiMessage severity="error">
+          {error?.data?.message || error.error}
+        </MuiMessage>
+        
       ) : (
         <>
           <Typography variant="h4" gutterBottom>
             Latest Products
+            
           </Typography>
           <Grid container spacing={3} sx={{ mb: 2 }}>
             {data?.products?.map((item) => (
@@ -128,7 +137,7 @@ const HomeScreen = () => {
           </Grid>
           {data?.pages > 1 && (
             <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-              <Paginate
+              <MuiPaginate
                 pages={data.pages}
                 page={data.page}
                 keyword={keyword || ''}

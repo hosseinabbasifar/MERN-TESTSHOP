@@ -9,9 +9,23 @@ import { useLoginMutation } from '../slices/userApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 
+//Mui Imports
+import {
+  Box,
+  TextField,
+  Button as MuiButton,
+  Typography,
+  Paper,
+  Grid,
+  CircularProgress,
+  Divider,
+} from '@mui/material';
+import { useTheme } from '../utils/ThemeContext';
+import MuiContainer from '../material-ui/components/MuiContainer';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors] = useState({ email: '', password: '' });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,6 +37,7 @@ const LoginScreen = () => {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get('redirect') || '/';
+  const { currentTheme } = useTheme();
 
   useEffect(() => {
     if (userInfo) {
@@ -41,47 +56,143 @@ const LoginScreen = () => {
     }
   };
 
-  return (
-    <FormContainer>
-      <h1>Sign In</h1>
+  if (currentTheme === 'bootstrap') {
+    return (
+      <FormContainer>
+        <h1>Sign In</h1>
 
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="my-2" controlId="email">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
+        <Form onSubmit={submitHandler}>
+          <Form.Group className="my-2" controlId="email">
+            <Form.Label>Email Address</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Button disabled={isLoading} type="submit" variant="primary">
+            Sign In
+          </Button>
+
+          {isLoading && <Loading />}
+        </Form>
+
+        <Row className="py-3">
+          <Col>
+            New Customer?{' '}
+            <Link
+              to={redirect ? `/register?redirect=${redirect}` : '/register'}
+            >
+              Register
+            </Link>
+          </Col>
+        </Row>
+      </FormContainer>
+    );
+  }
+  return (
+    <MuiContainer>
+      <Paper variant="Form">
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{
+            fontWeight: 'bold',
+            color: 'primary.main',
+            mb: 3,
+          }}
+        >
+          Sign In
+        </Typography>
+
+        <Box component="form" onSubmit={submitHandler} sx={{ width: '100%' }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+            error={!!errors.email}
+            helperText={errors.email}
+            sx={{ mb: 2 }}
+          />
 
-        <Form.Group className="my-2" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
             type="password"
-            placeholder="Enter password"
+            id="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+            error={!!errors.password}
+            helperText={errors.password}
+            sx={{ mb: 3 }}
+          />
 
-        <Button disabled={isLoading} type="submit" variant="primary">
-          Sign In
-        </Button>
+          <MuiButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={isLoading}
+            sx={{
+              py: 1.5,
+              mb: 2,
+              fontSize: '1rem',
+              fontWeight: 'bold',
+            }}
+          >
+            {isLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Sign In'
+            )}
+          </MuiButton>
+        </Box>
 
-        {isLoading && <Loading />}
-      </Form>
+        <Divider sx={{ width: '100%', my: 3 }} />
 
-      <Row className="py-3">
-        <Col>
-          New Customer?{' '}
-          <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}>
-            Register
-          </Link>
-        </Col>
-      </Row>
-    </FormContainer>
+        <Grid container justifyContent="center">
+          <Grid item>
+            <Typography variant="body2">
+              New Customer?{' '}
+              <Link
+                to={redirect ? `/register?redirect=${redirect}` : '/register'}
+                style={{
+                  textDecoration: 'none',
+                  color: 'primary.main',
+                  fontWeight: 'bold',
+                }}
+              >
+                Register
+              </Link>
+            </Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    </MuiContainer>
   );
 };
 

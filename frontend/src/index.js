@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/styles/index.css';
-import './assets/styles/bootstrap.custom.css';
+// import './assets/styles/bootstrap.custom.css';
 // import "bootstrap/dist/css/bootstrap.min.css";
 import store from './store';
 import { Provider } from 'react-redux';
@@ -32,15 +32,13 @@ import {
 } from 'react-router-dom';
 
 import { AppThemeProvider } from './utils/ThemeContext';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import materialUiTheme from './material-ui/styles/materialUiTheme';
+
 import RootLayout from './RootLayout';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-     <Route path="/" element={<App />}/> 
+      <Route path="/" element={<App />} />
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/page/:PageNumber" element={<HomeScreen />} />
       <Route path="/search/:keyword" element={<HomeScreen />} />
@@ -91,10 +89,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <AppThemeProvider>
-        <MuiThemeProvider theme={materialUiTheme}>
-          <CssBaseline />
-          <RouterProvider router={router} />
-        </MuiThemeProvider>
+        <RouterProvider router={router} />
       </AppThemeProvider>
     </Provider>
   </React.StrictMode>

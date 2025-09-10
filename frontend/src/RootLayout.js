@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useTheme } from './utils/ThemeContext';
@@ -15,13 +14,15 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container as MuiContainer } from '@mui/material';
 import materialUiTheme from './material-ui/styles/materialUiTheme';
+import MuiFooter from './material-ui/components/MuiFooter';
 
 const RootLayout = () => {
-  const { currentTheme } = useTheme();
+  const { currentTheme, mode } = useTheme();
+  const theme = materialUiTheme(mode);
 
   if (currentTheme === 'material-ui') {
     return (
-      <MuiThemeProvider theme={materialUiTheme}>
+      <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <ToastContainer />
         <MuiHeader />
@@ -30,12 +31,12 @@ const RootLayout = () => {
             <Outlet />
           </MuiContainer>
         </main>
-        <Footer />
+        <MuiFooter />
       </MuiThemeProvider>
     );
   }
 
-  // Fallback to Bootstrap theme by default
+  // Fallback to Bootstrap theme
   return (
     <>
       <ToastContainer />
