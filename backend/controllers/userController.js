@@ -120,7 +120,7 @@ const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({})
     .limit(pageSize)
     .skip(pageSize * (page - 1));
-  res.json({ users, page, pages: Math.ceil(count / pageSize) });
+  res.json({ users, page, pages: Math.ceil(count / pageSize), count });
 });
 
 // @desc    Logout user

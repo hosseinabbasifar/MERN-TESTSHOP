@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Stack, styled } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
 const StyledSearchStack = styled(Stack)(({ theme }) => ({
   display: 'flex',
@@ -39,6 +40,7 @@ const MuiSearchBox = () => {
     }
   };
 
+  const theme = useTheme();
   return (
     <Box component="form" onSubmit={submitHandler} sx={{ width: '100%' }}>
       <StyledSearchStack>
@@ -54,10 +56,10 @@ const MuiSearchBox = () => {
             flexGrow: 1,
             '& .MuiOutlinedInput-root': {
               borderRadius: '20px',
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backgroundColor: theme.palette.background.paper,
               transition: 'all 0.3s ease-in-out',
               '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 1)',
+                backgroundColor: theme.palette.action.hover,
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
               },
             },

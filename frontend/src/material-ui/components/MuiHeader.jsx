@@ -38,7 +38,6 @@ import {
   Person as PersonIcon,
   Menu as MenuIcon,
   Close as CloseIcon,
-  Dashboard as DashboardIcon,
   Inventory as InventoryIcon,
   Receipt as ReceiptIcon,
   People as PeopleIcon,

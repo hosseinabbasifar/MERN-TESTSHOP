@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
 const MuiPaginate = ({
   pages,
@@ -11,6 +12,8 @@ const MuiPaginate = ({
   keyword = '',
   pageType = 'products',
 }) => {
+  const theme = useTheme();
+
   const getPaginationPath = (pageNumber) => {
     if (!isAdmin) {
       return keyword
@@ -32,22 +35,50 @@ const MuiPaginate = ({
 
   return (
     pages > 1 && (
-      <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          my: 4,
+        }}
+      >
         <Pagination
           count={pages}
           page={page}
           renderItem={(item) => (
-            <Link
+            <PaginationItem
+              component={Link}
               to={getPaginationPath(item.page)}
-              style={{ textDecoration: 'none' }}
-            >
-              <PaginationItem {...item} />
-            </Link>
+              {...item}
+              sx={{
+                '&.Mui-selected': {
+                  bgcolor: theme.palette.primary.main,
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: theme.palette.primary.dark,
+                  },
+                },
+                '&:hover': {
+                  bgcolor: theme.palette.primary.light,
+                  color: 'white',
+                },
+                borderRadius: 2,
+                mx: 0.5,
+              }}
+            />
           )}
+          sx={{
+            '& .MuiPagination-ul': {
+              gap: 1,
+            },
+          }}
         />
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Page {page} of {pages}
+        </Typography>
       </Box>
     )
   );
 };
-
 export default MuiPaginate;

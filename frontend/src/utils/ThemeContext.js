@@ -28,7 +28,7 @@ export const AppThemeProvider = ({ children }) => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
   };
 
-  // Logic to conditionally inject or remove Bootstrap stylesheet
+  // Logic to ditionally inject or remove Bootstrap stylesheet
   useEffect(() => {
     const bootstrapStyle = document.getElementById('bootstrap-styles');
 

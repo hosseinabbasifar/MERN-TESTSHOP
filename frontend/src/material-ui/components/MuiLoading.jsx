@@ -12,7 +12,8 @@ const StyledLoaderContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
 }));
 
-const MuiLoading = () => {
+const MuiLoading = ({message ='LOADING...'}) => {
+ 
   return (
     <StyledLoaderContainer>
       <LinearProgress
@@ -32,7 +33,7 @@ const MuiLoading = () => {
         color="text.secondary"
         sx={{ mt: 2, fontWeight: 'medium' }}
       >
-        LOADING...
+        {message}
       </Typography>
     </StyledLoaderContainer>
   );

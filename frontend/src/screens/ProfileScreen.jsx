@@ -11,6 +11,7 @@ import { useGetUserOrdersQuery } from '../slices/orderApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { useTheme } from '../utils/ThemeContext';
 
+//Mui Imports
 import {
   Grid,
   TextField,
@@ -63,10 +64,10 @@ const ProfileScreen = () => {
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
 
-  useEffect(() => {
-    setName(userInfo.name);
-    setEmail(userInfo.email);
-  }, [userInfo.email, userInfo.name]);
+useEffect(() => {
+  setName(userInfo?.name || '');
+  setEmail(userInfo?.email || '');
+}, [userInfo]);
 
   const dispatch = useDispatch();
   const submitHandler = async (e) => {

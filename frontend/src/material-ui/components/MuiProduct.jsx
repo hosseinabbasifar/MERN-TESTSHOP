@@ -19,6 +19,7 @@ const MuiProduct = ({ product }) => {
     <Card
       sx={{
         height: { xs: 'auto', sm: 'auto' },
+        width: { xs: '100vw', sm: 'auto', lg: 'auto', xl: '250px' },
         display: 'flex',
         flexDirection: 'column',
         boxShadow: 3,
@@ -36,6 +37,7 @@ const MuiProduct = ({ product }) => {
           component="img"
           sx={{
             height: { xs: '250px', sm: '180px' },
+            
             objectFit: 'cover',
             width: '100%',
           }}

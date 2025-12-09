@@ -155,7 +155,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
-  res.json({ orders, page, pages: Math.ceil(count / pageSize) });
+  res.json({ orders, page, pages: Math.ceil(count / pageSize), count });
 });
 
 export {
