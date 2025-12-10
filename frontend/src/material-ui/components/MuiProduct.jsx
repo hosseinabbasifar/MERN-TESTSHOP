@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Card,
@@ -6,20 +5,16 @@ import {
   CardContent,
   Typography,
   CardActions,
-  Button,
   Rating,
   Box,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const MuiProduct = ({ product }) => {
   return (
     <Card
       sx={{
-        height: { xs: 'auto', sm: 'auto' },
-        width: { xs: '100vw', sm: 'auto', lg: 'auto', xl: '250px' },
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         boxShadow: 3,
@@ -37,7 +32,7 @@ const MuiProduct = ({ product }) => {
           component="img"
           sx={{
             height: { xs: '250px', sm: '180px' },
-            
+
             objectFit: 'cover',
             width: '100%',
           }}
@@ -73,47 +68,47 @@ const MuiProduct = ({ product }) => {
           {product.name}
         </Typography>
 
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mt: 'auto',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-            <Rating
-              value={product.rating}
-              precision={0.5}
-              readOnly
-              size="small"
-              sx={{ color: 'secondary.main' }}
-            />
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                ml: 1,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: '80px',
-              }}
-            >
-              ({product.numReviews})
-            </Typography>
-          </Box>
-          <Typography
-            variant="h6"
-            color="primary"
-            sx={{
-              fontWeight: 'bold',
-              ml: 1,
-            }}
-          >
-            ${product.price}
-          </Typography>
-        </Box>
+<Box
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    mt: 'auto',
+    justifyContent: 'flex-start',
+    gap: 1,
+    flexWrap: 'wrap',
+  }}
+>
+  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Rating
+      value={product.rating}
+      precision={0.5}
+      readOnly
+      size="small"
+      sx={{ color: 'secondary.main' }}
+    />
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{
+        ml: 1,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        maxWidth: '80px',
+      }}
+    >
+      ({product.numReviews})
+    </Typography>
+  </Box>
+
+  <Typography
+    variant="h3"
+    color="primary"
+    sx={{ fontWeight: 'bold' }}
+  >
+    ${product.price}
+  </Typography>
+</Box>
       </CardContent>
 
       <CardActions
@@ -124,36 +119,10 @@ const MuiProduct = ({ product }) => {
           display: 'flex',
           justifyContent: 'space-between',
           bgcolor: 'background.paper',
-          height: '60px', // Fixed height for actions
+          height: '20px', // Fixed height for actions
           alignItems: 'center',
         }}
-      >
-        <Button
-          component={Link}
-          to={`/product/${product._id}`}
-          variant="outlined"
-          size="small"
-          startIcon={<VisibilityIcon />}
-          sx={{
-            minWidth: '80px',
-            fontSize: '0.75rem',
-          }}
-        >
-          View
-        </Button>
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          startIcon={<AddShoppingCartIcon />}
-          sx={{
-            minWidth: '100px',
-            fontSize: '0.75rem',
-          }}
-        >
-          Add to Cart
-        </Button>
-      </CardActions>
+      ></CardActions>
     </Card>
   );
 };

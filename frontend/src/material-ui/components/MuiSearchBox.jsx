@@ -49,7 +49,7 @@ const MuiSearchBox = () => {
           name="q"
           onChange={(e) => setKeyword(e.target.value)}
           value={keyword}
-          placeholder="جستجو..."
+          placeholder="Search..."
           variant="outlined"
           size="small"
           sx={{

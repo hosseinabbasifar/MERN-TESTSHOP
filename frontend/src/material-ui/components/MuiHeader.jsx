@@ -15,7 +15,6 @@ import {
   MenuItem,
   Box,
   Container,
-  useMediaQuery,
   Drawer,
   List,
   ListItem,
@@ -64,7 +63,6 @@ const MuiHeader = () => {
   const [logoutApiCall] = useLogoutMutation();
 
   const muiTheme = useTheme();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
   const { currentTheme, toggleTheme ,mode,toggleMode} = useAppTheme();
 
   const cartItemsCount = cartItems.reduce((a, c) => a + c.qty, 0);

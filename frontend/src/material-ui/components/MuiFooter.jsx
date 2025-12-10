@@ -32,35 +32,35 @@ import {
 const MuiFooter = () => {
   const theme = useTheme();
   const socialLinks = [
-    { 
-      icon: <LinkedInIcon />, 
-      name: 'LinkedIn', 
+    {
+      icon: <LinkedInIcon />,
+      name: 'LinkedIn',
       color: '#0077B5',
-      href: 'https://linkedin.com'
+      href: 'https://linkedin.com',
     },
-    { 
-      icon: <GitHubIcon />, 
-      name: 'GitHub', 
+    {
+      icon: <GitHubIcon />,
+      name: 'GitHub',
       color: theme.palette.mode === 'dark' ? '#fff' : '#333',
-      href: 'https://github.com'
+      href: 'https://github.com',
     },
-    { 
-      icon: <InstagramIcon />, 
-      name: 'Instagram', 
+    {
+      icon: <InstagramIcon />,
+      name: 'Instagram',
       color: '#E4405F',
-      href: 'https://instagram.com'
+      href: 'https://instagram.com',
     },
-    { 
-      icon: <TelegramIcon />, 
-      name: 'Telegram', 
+    {
+      icon: <TelegramIcon />,
+      name: 'Telegram',
       color: '#0088CC',
-      href: 'https://telegram.org'
+      href: 'https://telegram.org',
     },
-    { 
-      icon: <WhatsAppIcon />, 
-      name: 'WhatsApp', 
+    {
+      icon: <WhatsAppIcon />,
+      name: 'WhatsApp',
       color: '#25D366',
-      href: 'https://whatsapp.com'
+      href: 'https://whatsapp.com',
     },
   ];
   const quickLinks = [
@@ -83,9 +83,15 @@ const MuiFooter = () => {
       component="footer"
       sx={{
         mt: 'auto',
-        background: theme.palette.mode === 'dark'
-          ? `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${alpha(theme.palette.background.default, 0.95)} 100%)`
-          : `linear-gradient(180deg, ${alpha(theme.palette.grey[50], 0.8)} 0%, ${theme.palette.background.paper} 100%)`,
+        background:
+          theme.palette.mode === 'dark'
+            ? `linear-gradient(180deg, ${
+                theme.palette.background.paper
+              } 0%, ${alpha(theme.palette.background.default, 0.95)} 100%)`
+            : `linear-gradient(180deg, ${alpha(
+                theme.palette.grey[50],
+                0.8
+              )} 0%, ${theme.palette.background.paper} 100%)`,
         borderTop: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
         position: 'relative',
         overflow: 'hidden',
@@ -95,8 +101,8 @@ const MuiFooter = () => {
       <Box
         sx={{
           position: 'absolute',
-          top: -80,
-          right: -80,
+          top: -60,
+          right: -60,
           width: 200,
           height: 200,
           borderRadius: '50%',
@@ -116,11 +122,25 @@ const MuiFooter = () => {
           filter: 'blur(40px)',
         }}
       />
-      
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 }, position: 'relative' }}>
+
+      <Container
+        maxWidth="lg"
+        sx={{
+          py: { xs: 4, md: 6 },
+          px: { xs: 2, sm: 3 },
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {' '}
         <Grid container spacing={{ xs: 3, md: 4 }}>
           {/* Company Info & Social Media */}
-          <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{ textAlign: { xs: 'center', md: 'left' } }}
+          >
             <Stack spacing={3} alignItems={{ xs: 'center', md: 'flex-start' }}>
               <Box>
                 <Typography
@@ -135,25 +155,27 @@ const MuiFooter = () => {
                 >
                   MERN-TESTSHOP
                 </Typography>
-                <Typography 
-                  variant="body1" 
+                <Typography
+                  variant="body1"
                   color="text.secondary"
-                  sx={{ 
-                    lineHeight: 1.8, 
-                    maxWidth: { xs: '100%', md: 350 },
+                  sx={{
+                    lineHeight: 1.8,
+                    maxWidth: { xs: '100%', sm: 400, md: 350 },
+                    textAlign: { xs: 'center', md: 'left' },
                     fontWeight: 400,
                   }}
                 >
-                  Your trusted destination for premium digital products and accessories. 
-                  Quality, innovation, and customer satisfaction guaranteed.
+                  Your trusted destination for premium digital products and
+                  accessories. Quality, innovation, and customer satisfaction
+                  guaranteed.
                 </Typography>
               </Box>
-              
+
               {/* Trust Features */}
-              <Stack 
-                direction="row" 
-                spacing={2} 
-                flexWrap="wrap" 
+              <Stack
+                direction="row"
+                spacing={2}
+                flexWrap="wrap"
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
               >
                 {trustFeatures.map((feature, index) => (
@@ -167,7 +189,10 @@ const MuiFooter = () => {
                         px: 2,
                         py: 1,
                         borderRadius: 2,
-                        border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                        border: `1px solid ${alpha(
+                          theme.palette.primary.main,
+                          0.2
+                        )}`,
                         bgcolor: alpha(theme.palette.primary.main, 0.05),
                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         cursor: 'pointer',
@@ -179,7 +204,7 @@ const MuiFooter = () => {
                     >
                       {React.cloneElement(feature.icon, {
                         fontSize: 'small',
-                        sx: { color: theme.palette.primary.main }
+                        sx: { color: theme.palette.primary.main },
                       })}
                       <Typography variant="caption" fontWeight={500}>
                         {feature.label}
@@ -188,7 +213,7 @@ const MuiFooter = () => {
                   </Tooltip>
                 ))}
               </Stack>
-              
+
               {/* Social Icons */}
               <Stack direction="row" spacing={1.5} sx={{ pt: 1 }}>
                 {socialLinks.map((social, index) => (
@@ -218,12 +243,18 @@ const MuiFooter = () => {
               </Stack>
             </Stack>
           </Grid>
-          
+
           {/* Quick Links */}
-          <Grid item xs={12} sm={6} md={4} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-            <Typography 
-              variant="h6" 
-              sx={{ 
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            sx={{ textAlign: { xs: 'center', md: 'left' } }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
                 fontWeight: 700,
                 mb: 3,
                 position: 'relative',
@@ -238,16 +269,13 @@ const MuiFooter = () => {
                   height: 3,
                   backgroundColor: theme.palette.primary.main,
                   borderRadius: 2,
-                }
+                },
               }}
             >
               Quick Links
             </Typography>
-            
-            <Stack 
-              spacing={2} 
-              alignItems={{ xs: 'center', md: 'flex-start' }}
-            >
+
+            <Stack spacing={2} alignItems={{ xs: 'center', md: 'flex-start' }}>
               {quickLinks.map((link, index) => (
                 <MuiLink
                   key={index}
@@ -283,12 +311,18 @@ const MuiFooter = () => {
               ))}
             </Stack>
           </Grid>
-          
+
           {/* Contact Info */}
-          <Grid item xs={12} sm={6} md={4} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-            <Typography 
-              variant="h6" 
-              sx={{ 
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            sx={{ textAlign: { xs: 'center', md: 'left' } }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
                 fontWeight: 700,
                 mb: 3,
                 position: 'relative',
@@ -303,20 +337,25 @@ const MuiFooter = () => {
                   height: 3,
                   backgroundColor: theme.palette.primary.main,
                   borderRadius: 2,
-                }
+                },
               }}
             >
               Contact Us
             </Typography>
-            
-            <Stack spacing={2.5} alignItems={{ xs: 'center', md: 'flex-start' }}>
-              <Box sx={{ 
-                display: 'flex', 
-                alignItems: { xs: 'center', md: 'flex-start' }, 
-                gap: 2,
-                flexDirection: { xs: 'column', md: 'row' },
-                textAlign: { xs: 'center', md: 'left' }
-              }}>
+
+            <Stack
+              spacing={2.5}
+              alignItems={{ xs: 'center', md: 'flex-start' }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: { xs: 'center', md: 'flex-start' },
+                  gap: 2,
+                  flexDirection: { xs: 'column', md: 'row' },
+                  textAlign: { xs: 'center', md: 'left' },
+                }}
+              >
                 <Box
                   sx={{
                     p: 1,
@@ -332,20 +371,27 @@ const MuiFooter = () => {
                   <Typography variant="body2" fontWeight={600} gutterBottom>
                     Our Location
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-                    Khoy, West Azerbaijan<br />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    Khoy, West Azerbaijan
+                    <br />
                     Iran, Middle East
                   </Typography>
                 </Box>
               </Box>
-              
-              <Box sx={{ 
-                display: 'flex', 
-                alignItems: { xs: 'center', md: 'center' }, 
-                gap: 2,
-                flexDirection: { xs: 'column', md: 'row' },
-                textAlign: { xs: 'center', md: 'left' }
-              }}>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: { xs: 'center', md: 'center' },
+                  gap: 2,
+                  flexDirection: { xs: 'column', md: 'row' },
+                  textAlign: { xs: 'center', md: 'left' },
+                }}
+              >
                 <Box
                   sx={{
                     p: 1,
@@ -369,14 +415,16 @@ const MuiFooter = () => {
                   </Typography>
                 </Box>
               </Box>
-              
-              <Box sx={{ 
-                display: 'flex', 
-                alignItems: { xs: 'center', md: 'center' }, 
-                gap: 2,
-                flexDirection: { xs: 'column', md: 'row' },
-                textAlign: { xs: 'center', md: 'left' }
-              }}>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: { xs: 'center', md: 'center' },
+                  gap: 2,
+                  flexDirection: { xs: 'column', md: 'row' },
+                  textAlign: { xs: 'center', md: 'left' },
+                }}
+              >
                 <Box
                   sx={{
                     p: 1,
@@ -408,48 +456,21 @@ const MuiFooter = () => {
                   </Typography>
                 </Box>
               </Box>
-              
-              {/* Newsletter Signup */}
-              <Paper
-                elevation={0}
-                sx={{
-                  mt: 2,
-                  p: 2.5,
-                  borderRadius: 3,
-                  bgcolor: alpha(theme.palette.primary.main, 0.05),
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-                  transition: 'all 0.3s',
-                  '&:hover': {
-                    bgcolor: alpha(theme.palette.primary.main, 0.08),
-                    transform: 'translateY(-2px)',
-                  },
-                  width: { xs: '100%', md: 'auto' },
-                  maxWidth: { xs: '300px', md: 'none' },
-                  mx: { xs: 'auto', md: 0 }
-                }}
-              >
-                <Typography variant="subtitle2" fontWeight={700} gutterBottom textAlign="center">
-                  Stay Updated 📧
-                </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.5 }} textAlign="center">
-                  Subscribe to get special offers, product updates, and exclusive deals delivered to your inbox.
-                </Typography>
-              </Paper>
+
+
             </Stack>
           </Grid>
         </Grid>
-        
         {/* Bottom Section */}
-        <Divider 
-          sx={{ 
-            my: { xs: 3, md: 5 }, 
+        <Divider
+          sx={{
+            my: { xs: 3, md: 5 },
             borderColor: alpha(theme.palette.divider, 0.3),
             '&::before, &::after': {
               borderTopColor: alpha(theme.palette.divider, 0.3),
-            }
-          }} 
+            },
+          }}
         />
-        
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           justifyContent="space-between"
@@ -457,21 +478,21 @@ const MuiFooter = () => {
           spacing={3}
           textAlign={{ xs: 'center', sm: 'left' }}
         >
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color="text.secondary"
-            sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
               gap: 1,
               fontWeight: 500,
-              justifyContent: { xs: 'center', sm: 'flex-start' }
+              justifyContent: { xs: 'center', sm: 'flex-start' },
             }}
           >
             © {new Date().getFullYear()} MERN-TESTSHOP. Made with
-            <HeartIcon 
-              fontSize="small" 
-              sx={{ 
+            <HeartIcon
+              fontSize="small"
+              sx={{
                 color: theme.palette.error.main,
                 animation: 'pulse 2s infinite',
                 '@keyframes pulse': {
@@ -479,19 +500,23 @@ const MuiFooter = () => {
                   '50%': { transform: 'scale(1.1)' },
                   '100%': { transform: 'scale(1)' },
                 },
-              }} 
+              }}
             />
             in Iran 🇮🇷
           </Typography>
-          
-          <Stack 
-            direction="row" 
-            spacing={1.5} 
+
+          <Stack
+            direction="row"
+            spacing={1.5}
             alignItems="center"
             justifyContent={{ xs: 'center', sm: 'flex-start' }}
             flexWrap="wrap"
           >
-            <Typography variant="caption" color="text.secondary" fontWeight={500}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight={500}
+            >
               Secure payments:
             </Typography>
             {paymentMethods.map((payment) => (
