@@ -14,10 +14,6 @@ import {
   Stack,
   alpha,
   Grid,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
   Avatar,
   Paper,
 } from '@mui/material';
@@ -418,48 +414,24 @@ const ProductFormScreen = () => {
 
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth variant="outlined">
-                        <InputLabel shrink>Brand *</InputLabel>
-                        <Select
-                          name="brand"
-                          value={formData.brand}
-                          onChange={handleChange}
-                          label="Brand *"
-                          displayEmpty // این پراپرتی به نمایش صحیح placeholder کمک می‌کند
-                          sx={{ borderRadius: 2 }}
-                        >
-                          <MenuItem value="" disabled>
-                            Select Brand
-                          </MenuItem>
-                          {brands.map((brand) => (
-                            <MenuItem key={brand} value={brand}>
-                              {brand}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      <TextField
+                        fullWidth
+                        label="Brand *"
+                        name="brand"
+                        value={formData.brand}
+                        onChange={handleChange}
+                        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth variant="outlined">
-                        <InputLabel shrink>Category *</InputLabel>
-                        <Select
-                          name="category"
-                          value={formData.category}
-                          onChange={handleChange}
-                          label="Category *"
-                          displayEmpty 
-                          sx={{ borderRadius: 2 }}
-                        >
-                          <MenuItem value="" disabled>
-                            Select Category
-                          </MenuItem>
-                          {categories.map((category) => (
-                            <MenuItem key={category} value={category}>
-                              {category}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      <TextField
+                        fullWidth
+                        label="Category *"
+                        name="category"
+                        value={formData.category}
+                        onChange={handleChange}
+                        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+                      />
                     </Grid>
                   </Grid>
                   <TextField
