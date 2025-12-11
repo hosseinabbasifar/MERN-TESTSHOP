@@ -69,7 +69,7 @@ Before running this application, make sure you have the following installed:
    ```env
    NODE_ENV=development
    PORT=5000
-   MONGO_URI=your_mongodb_connection_string
+   MONGO_DB_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
    PAYPAL_CLIENT_ID=your_paypal_client_id
    ```
