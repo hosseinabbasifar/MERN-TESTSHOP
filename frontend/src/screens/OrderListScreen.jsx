@@ -48,9 +48,24 @@ const OrderListScreen = () => {
 
   const { currentTheme } = useTheme();
   const theme = useMuiTheme();
+    const renderLoadingAndError = () => {
+    if (isLoading || isFetching) {
+      return currentTheme === 'bootstrap' ? <Loading /> : <MuiLoading message="Loading orders..."/>;
+    }
+    if (error) {
+      const message = error?.data?.message || error.error;
+      return currentTheme === 'bootstrap' ? (
+        <Message variant="danger">{message}</Message>
+      ) : (
+        <MuiMessage severity="error">{message}</MuiMessage>
+      );
+    }
+    return null;
+  };
 
-  if (isLoading || isFetching) {
-    return <MuiLoading message="Loading orders..." />;
+  const loadingOrErrorComponent = renderLoadingAndError();
+  if (loadingOrErrorComponent) {
+    return loadingOrErrorComponent;
   }
 
   if (error) {

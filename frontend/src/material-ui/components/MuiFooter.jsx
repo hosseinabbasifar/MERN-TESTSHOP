@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -36,31 +37,31 @@ const MuiFooter = () => {
       icon: <LinkedInIcon />,
       name: 'LinkedIn',
       color: '#0077B5',
-      href: 'https://linkedin.com',
+      href: 'https://linkedin.com/in/hosseinabbasifar',
     },
     {
       icon: <GitHubIcon />,
       name: 'GitHub',
       color: theme.palette.mode === 'dark' ? '#fff' : '#333',
-      href: 'https://github.com',
+      href: 'https://github.com/hosseinabbasifar ',
     },
     {
       icon: <InstagramIcon />,
       name: 'Instagram',
       color: '#E4405F',
-      href: 'https://instagram.com',
+      href: 'https://www.instagram.com/hosseinabbasifar',
     },
     {
       icon: <TelegramIcon />,
       name: 'Telegram',
       color: '#0088CC',
-      href: 'https://telegram.org',
+      href: 'https://t.me/hosseinabbasifar',
     },
     {
       icon: <WhatsAppIcon />,
       name: 'WhatsApp',
       color: '#25D366',
-      href: 'https://whatsapp.com',
+      href: 'https://wa.me/989303303361',
     },
   ];
   const quickLinks = [
@@ -279,7 +280,11 @@ const MuiFooter = () => {
               {quickLinks.map((link, index) => (
                 <MuiLink
                   key={index}
-                  href={link.href}
+                  component={RouterLink}
+                  to={link.href}
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
                   color="text.secondary"
                   underline="none"
                   sx={{
@@ -456,8 +461,6 @@ const MuiFooter = () => {
                   </Typography>
                 </Box>
               </Box>
-
-
             </Stack>
           </Grid>
         </Grid>

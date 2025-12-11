@@ -62,7 +62,6 @@ const UsersFormScreen = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resetPassword, setResetPassword] = useState(false);
 
-
   const navigate = useNavigate();
   const { currentTheme } = useTheme();
   const theme = useMuiTheme();
@@ -75,9 +74,35 @@ const UsersFormScreen = () => {
     skip: !isEditMode,
   });
 
-  const [updateUser, { isLoading: loadingUpdate }] = useUpdateUserMutation();
-  const [createUser, { isLoading: loadingCreate }] = useCreateUserMutation();
+  const [updateUser, { isLoading: loadingUpdate, error: updateError }] =
+    useUpdateUserMutation();
+  const [createUser, { isLoading: loadingCreate, error: createError }] =
+    useCreateUserMutation();
 
+  const renderLoadingAndError = () => {
+    if (isLoading || loadingUpdate || loadingCreate) {
+      return currentTheme === 'bootstrap' ? <Loading /> : <MuiLoading />;
+    }
+
+    let errorMessage = null;
+    if (updateError) {
+      errorMessage = updateError?.data?.message || updateError.error;
+    } else if (createError) {
+      errorMessage = createError?.data?.message || createError.error;
+    } else if (error) {
+      errorMessage = error?.data?.message || error.error;
+    }
+
+    if (errorMessage) {
+      return currentTheme === 'bootstrap' ? (
+        <Message variant="danger">{errorMessage}</Message>
+      ) : (
+        <MuiMessage severity="error">{errorMessage}</MuiMessage>
+      );
+    }
+
+    return null;
+  };
   useEffect(() => {
     if (isEditMode && user) {
       setName(user.name || '');
@@ -86,24 +111,54 @@ const UsersFormScreen = () => {
     }
   }, [isEditMode, user]);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-      if (isEditMode) {
-        await updateUser({ _id: userId, name, email, isAdmin }).unwrap();
-        toast.success('User updated successfully');
-      } else {
-        await createUser({ name, email, password, isAdmin }).unwrap();
-        toast.success('User created successfully');
-      }
-      navigate('/admin/users');
-    } catch (err) {
-      toast.error(err?.data?.message || err.error || 'Something went wrong');
+const submitHandler = async (e) => {
+  e.preventDefault();
+  
+  if (!isEditMode) {
+    if (!name || !email || !password) {
+      toast.error('Please fill all required fields');
+      return;
     }
-  };
+  } 
+  else {
+    if (!name || !email) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    
+    if (resetPassword && (!password || password !== confirmPassword)) {
+      toast.error('Please enter and confirm new password');
+      return;
+    }
+  }
 
-const goBackHandler = () => {
+  try {
+    if (isEditMode) {
+    
+      const updateData = { 
+        _id: userId, 
+        name, 
+        email, 
+        isAdmin 
+      };
+      
+      if (resetPassword && password) {
+        updateData.password = password;
+      }
+      
+      await updateUser(updateData).unwrap();
+      toast.success('User updated successfully');
+    } else {
+      await createUser({ name, email, password, isAdmin }).unwrap();
+      toast.success('User created successfully');
+    }
+    navigate('/admin/users');
+  } catch (err) {
+    toast.error(err?.data?.message || err.error || 'Something went wrong');
+  }
+};
+
+  const goBackHandler = () => {
     navigate('/admin/users');
   };
 
@@ -114,7 +169,9 @@ const goBackHandler = () => {
       setConfirmPassword('');
     }
   };
-
+  if (renderLoadingAndError()) {
+    return renderLoadingAndError();
+  }
 
   if (currentTheme === 'bootstrap') {
     return (
@@ -183,7 +240,7 @@ const goBackHandler = () => {
       </>
     );
   }
-   return (
+  return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Header */}
       <Paper
@@ -198,7 +255,11 @@ const goBackHandler = () => {
           overflow: 'hidden',
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Stack direction="row" alignItems="center" spacing={2}>
             <Box
               sx={{
@@ -207,14 +268,20 @@ const goBackHandler = () => {
                 bgcolor: alpha('#fff', 0.15),
               }}
             >
-              {isAdmin ? <AdminIcon sx={{ fontSize: 32 }} /> : <PersonIcon sx={{ fontSize: 32 }} />}
+              {isAdmin ? (
+                <AdminIcon sx={{ fontSize: 32 }} />
+              ) : (
+                <PersonIcon sx={{ fontSize: 32 }} />
+              )}
             </Box>
             <Box>
               <Typography variant="h4" fontWeight={700} gutterBottom>
                 {isEditMode ? 'Edit User' : 'Create User'}
               </Typography>
               <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                {isEditMode ? 'Update user information and manage access' : 'Add a new user to the system'}
+                {isEditMode
+                  ? 'Update user information and manage access'
+                  : 'Add a new user to the system'}
               </Typography>
             </Box>
           </Stack>
@@ -238,7 +305,9 @@ const goBackHandler = () => {
       </Paper>
 
       {/* Loading States */}
-      {(loadingUpdate || loadingCreate) && <MuiLoading message="Saving user..." />}
+      {(loadingUpdate || loadingCreate) && (
+        <MuiLoading message="Saving user..." />
+      )}
 
       {/* Error Message */}
       {error && (
@@ -266,14 +335,20 @@ const goBackHandler = () => {
                     sx={{
                       width: 120,
                       height: 120,
-                      bgcolor: isAdmin ? theme.palette.warning.main : theme.palette.primary.main,
+                      bgcolor: isAdmin
+                        ? theme.palette.warning.main
+                        : theme.palette.primary.main,
                       fontSize: '2rem',
                       border: `3px solid ${theme.palette.divider}`,
                     }}
                   >
-                    {name ? name.charAt(0).toUpperCase() : <PersonIcon sx={{ fontSize: 40 }} />}
+                    {name ? (
+                      name.charAt(0).toUpperCase()
+                    ) : (
+                      <PersonIcon sx={{ fontSize: 40 }} />
+                    )}
                   </Avatar>
-                  
+
                   {/* Admin Role Toggle */}
                   <Card
                     elevation={0}
@@ -306,16 +381,15 @@ const goBackHandler = () => {
                         },
                       }}
                     />
-                    
-                    <Typography 
-                      variant="caption" 
-                      color={isAdmin ? "warning.main" : "text.secondary"}
+
+                    <Typography
+                      variant="caption"
+                      color={isAdmin ? 'warning.main' : 'text.secondary'}
                       sx={{ mt: 1, display: 'block' }}
                     >
-                      {isAdmin 
-                        ? 'Full system access with admin privileges' 
-                        : 'Standard user with limited permissions'
-                      }
+                      {isAdmin
+                        ? 'Full system access with admin privileges'
+                        : 'Standard user with limited permissions'}
                     </Typography>
                   </Card>
 
@@ -324,24 +398,40 @@ const goBackHandler = () => {
                     <Card
                       elevation={0}
                       sx={{
-                        border: `1px solid ${resetPassword ? theme.palette.error.main : theme.palette.divider}`,
+                        border: `1px solid ${
+                          resetPassword
+                            ? theme.palette.error.main
+                            : theme.palette.divider
+                        }`,
                         borderRadius: 2,
                         p: 2,
                         width: '100%',
-                        bgcolor: resetPassword ? alpha(theme.palette.error.main, 0.02) : 'transparent',
+                        bgcolor: resetPassword
+                          ? alpha(theme.palette.error.main, 0.02)
+                          : 'transparent',
                       }}
                     >
-                      <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
                         <Stack direction="row" alignItems="center" spacing={1}>
-                          <SecurityIcon 
-                            color={resetPassword ? 'error' : 'action'} 
-                            fontSize="small" 
+                          <SecurityIcon
+                            color={resetPassword ? 'error' : 'action'}
+                            fontSize="small"
                           />
                           <Typography variant="body2" fontWeight={500}>
                             Reset Password
                           </Typography>
                         </Stack>
-                        <Tooltip title={resetPassword ? 'Cancel password reset' : 'Enable password reset'}>
+                        <Tooltip
+                          title={
+                            resetPassword
+                              ? 'Cancel password reset'
+                              : 'Enable password reset'
+                          }
+                        >
                           <IconButton
                             onClick={handleResetPasswordToggle}
                             color={resetPassword ? 'error' : 'default'}
@@ -351,12 +441,15 @@ const goBackHandler = () => {
                           </IconButton>
                         </Tooltip>
                       </Stack>
-                      
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                        {resetPassword 
-                          ? 'User will be required to use the new password' 
-                          : 'Click to set a new password for this user'
-                        }
+
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ mt: 1, display: 'block' }}
+                      >
+                        {resetPassword
+                          ? 'User will be required to use the new password'
+                          : 'Click to set a new password for this user'}
                       </Typography>
                     </Card>
                   )}
@@ -367,10 +460,14 @@ const goBackHandler = () => {
               <Grid item xs={12} md={8}>
                 <Stack spacing={3}>
                   {/* Basic Information */}
-                  <Typography variant="h6" fontWeight={600} color="text.primary">
+                  <Typography
+                    variant="h6"
+                    fontWeight={600}
+                    color="text.primary"
+                  >
                     Basic Information
                   </Typography>
-                  
+
                   <TextField
                     fullWidth
                     label="Full Name *"
@@ -392,7 +489,11 @@ const goBackHandler = () => {
                   {(!isEditMode || resetPassword) && (
                     <>
                       <Divider sx={{ my: 2 }}>
-                        <Typography variant="h6" fontWeight={600} color="text.primary">
+                        <Typography
+                          variant="h6"
+                          fontWeight={600}
+                          color="text.primary"
+                        >
                           <LockIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                           {isEditMode ? 'New Password' : 'Password'}
                         </Typography>
@@ -401,8 +502,9 @@ const goBackHandler = () => {
                       {isEditMode && resetPassword && (
                         <Alert severity="warning" sx={{ borderRadius: 2 }}>
                           <Typography variant="body2">
-                            Setting a new password will immediately update the user's credentials. 
-                            Make sure to inform the user about their new password.
+                            Setting a new password will immediately update the
+                            user's credentials. Make sure to inform the user
+                            about their new password.
                           </Typography>
                         </Alert>
                       )}
@@ -419,7 +521,11 @@ const goBackHandler = () => {
                               onClick={() => setShowPassword(!showPassword)}
                               edge="end"
                             >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                              {showPassword ? (
+                                <VisibilityOffIcon />
+                              ) : (
+                                <VisibilityIcon />
+                              )}
                             </IconButton>
                           ),
                         }}
@@ -435,17 +541,25 @@ const goBackHandler = () => {
                         InputProps={{
                           endAdornment: (
                             <IconButton
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
                               edge="end"
                             >
-                              {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                              {showConfirmPassword ? (
+                                <VisibilityOffIcon />
+                              ) : (
+                                <VisibilityIcon />
+                              )}
                             </IconButton>
                           ),
                         }}
-                        error={password !== confirmPassword && confirmPassword !== ''}
+                        error={
+                          password !== confirmPassword && confirmPassword !== ''
+                        }
                         helperText={
-                          password !== confirmPassword && confirmPassword !== '' 
-                            ? 'Passwords do not match' 
+                          password !== confirmPassword && confirmPassword !== ''
+                            ? 'Passwords do not match'
                             : 'Minimum 6 characters required'
                         }
                         sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
@@ -471,14 +585,18 @@ const goBackHandler = () => {
                       '&:hover': {
                         background: `linear-gradient(135deg, ${theme.palette.info.dark} 0%, ${theme.palette.info.main} 100%)`,
                         transform: 'translateY(-2px)',
-                        boxShadow: `0 8px 24px ${alpha(theme.palette.info.main, 0.25)}`,
+                        boxShadow: `0 8px 24px ${alpha(
+                          theme.palette.info.main,
+                          0.25
+                        )}`,
                       },
                     }}
                   >
-                    {isEditMode 
-                      ? (resetPassword ? 'Update User & Reset Password' : 'Update User')
-                      : 'Create User'
-                    }
+                    {isEditMode
+                      ? resetPassword
+                        ? 'Update User & Reset Password'
+                        : 'Update User'
+                      : 'Create User'}
                   </MuiButton>
                 </Stack>
               </Grid>

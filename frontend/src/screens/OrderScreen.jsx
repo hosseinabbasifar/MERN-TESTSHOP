@@ -660,7 +660,7 @@ const OrderScreen = () => {
               borderRadius: 3,
               border: `1px solid ${theme.palette.divider}`,
               position: 'sticky',
-              top: 30,
+              top: 80,
               overflow: 'hidden',
             }}
           >

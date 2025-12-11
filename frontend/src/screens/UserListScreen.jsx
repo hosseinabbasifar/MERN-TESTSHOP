@@ -72,11 +72,28 @@ const UserListScreen = () => {
   const { currentTheme } = useTheme();
   const theme = useMuiTheme();
 
+  const renderLoadingAndError = () => {
+  if (isLoading || isFetching || loadingDelete) {
+    return currentTheme === 'bootstrap' ? <Loading /> : <MuiLoading />;
+  }
+  if (error) {
+    const message = error?.data?.message || error.error;
+    return currentTheme === 'bootstrap' ? (
+      <Message variant="danger">{message}</Message>
+    ) : (
+      <MuiMessage severity="error" message="Loading Users...">{message}</MuiMessage>
+    );
+  }
+  return null;
+};
+
   useEffect(() => {
     refetch();
   }, [refetch]);
-  if (isLoading || isFetching) {
-    return <MuiLoading message="Loading users..." />;
+
+   const loadingOrErrorComponent = renderLoadingAndError();
+  if (loadingOrErrorComponent) {
+    return loadingOrErrorComponent;
   }
 
   if (error) {
@@ -107,7 +124,7 @@ const UserListScreen = () => {
           <Loading />
         ) : error ? (
           <Message variant="danger">
-            {error?.data?.message || error.error}
+            {error?.data?.message || error.error || 'An error occurred'}
           </Message>
         ) : (
           <>

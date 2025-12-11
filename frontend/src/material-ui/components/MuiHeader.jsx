@@ -1,5 +1,5 @@
 // MuiHeader.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLogoutMutation } from '../../slices/userApiSlice';
@@ -50,6 +50,7 @@ import {
 import logo from '../../assets/logo.png';
 import MuiSearchBox from './MuiSearchBox';
 import { useTheme as useAppTheme } from '../../utils/ThemeContext';
+import { toast } from 'react-toastify';
 
 const MuiHeader = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -63,7 +64,9 @@ const MuiHeader = () => {
   const [logoutApiCall] = useLogoutMutation();
 
   const muiTheme = useTheme();
-  const { currentTheme, toggleTheme ,mode,toggleMode} = useAppTheme();
+  const { currentTheme, toggleTheme, mode, toggleMode } = useAppTheme();
+
+  
 
   const cartItemsCount = cartItems.reduce((a, c) => a + c.qty, 0);
 
@@ -426,6 +429,7 @@ const MuiHeader = () => {
             <Box
               component={NavLink}
               to="/"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -722,18 +726,18 @@ const MuiHeader = () => {
                   Sign In
                 </Button>
               )}
-            {/* دکمه سوئیچ تم در حالت دسکتاپ */}
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={currentTheme === 'material-ui'}
-                  onChange={toggleTheme}
-                  color="secondary"
-                />
-              }
-              label={currentTheme === 'material-ui' ? 'MUI' : 'BS'}
-              sx={{ color: 'inherit', ml: 1 }}
-            />
+              {/* دکمه سوئیچ تم در حالت دسکتاپ */}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={currentTheme === 'material-ui'}
+                    onChange={toggleTheme}
+                    color="secondary"
+                  />
+                }
+                label={currentTheme === 'material-ui' ? 'MUI' : 'BS'}
+                sx={{ color: 'inherit', ml: 1 }}
+              />
             </Stack>
 
             {/* Mobile Menu Button */}

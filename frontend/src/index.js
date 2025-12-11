@@ -24,6 +24,12 @@ import ProductListScreen from './screens/ProductListScreen';
 import ProductFormScreen from './screens/ProductFormScreen';
 import UserListScreen from './screens/UserListScreen';
 import UsersFormScreen from './screens/UsersFormScreen';
+import AboutUsScreen from './screens/AboutUsScreen.jsx';
+import PrivacyPolicyScreen from './screens/PrivacyPolicyScreen.jsx';
+import TermsConditionsScreen from './screens/TermsConditionsScreen.jsx';
+import FAQScreen from './screens/FAQScreen.jsx';
+import ShippingInfoScreen from './screens/ShippingInfoScreen.jsx';
+import ReturnsScreen from './screens/ReturnsScreen.jsx';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -50,6 +56,12 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<CartScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/about" element={<AboutUsScreen />} />
+      <Route path="/privacy" element={<PrivacyPolicyScreen />} />
+      <Route path="/terms" element={<TermsConditionsScreen />} />
+      <Route path="/faq" element={<FAQScreen />} />
+      <Route path="/shipping" element={<ShippingInfoScreen />} />
+      <Route path="/returns" element={<ReturnsScreen />} />
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/shipping" element={<ShippingScreen />} />

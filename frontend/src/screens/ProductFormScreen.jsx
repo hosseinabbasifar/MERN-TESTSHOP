@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
+import Message from '../components/Message';
+import Loading from '../components/Loading';
+import FormContainer from '../components/FormContainer';
 import {
   TextField,
-  Button,
+  Button as MuiButton,
   Typography,
   Box,
   Card,
@@ -16,10 +20,8 @@ import {
   Select,
   Avatar,
   Paper,
-  LinearProgress,
-
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useTheme as useMuiTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
 import {
   ArrowBack as BackIcon,
@@ -36,9 +38,11 @@ import {
   useUpdateProductMutation,
   useUploadProductImageMutation,
 } from '../slices/productApiSlice';
+import { useTheme } from '../utils/ThemeContext';
 
 const ProductFormScreen = () => {
-  const theme = useTheme();
+  const { currentTheme } = useTheme();
+  const theme = useMuiTheme();
   const { id: productId } = useParams();
   const navigate = useNavigate();
   const isEditMode = !!productId;
@@ -59,11 +63,39 @@ const ProductFormScreen = () => {
     error: errorProduct,
   } = useGetProductsDetailQuery(productId, { skip: !isEditMode });
 
-  const [createProduct, { isLoading: loadingCreate }] = useCreateProductMutation();
-  const [updateProduct, { isLoading: loadingUpdate }] = useUpdateProductMutation();
-  const [uploadProductImage, { isLoading: loadingUpload }] = useUploadProductImageMutation();
+  const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation();
+  const [updateProduct, { isLoading: loadingUpdate }] =
+    useUpdateProductMutation();
+  const [uploadProductImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation();
 
-  const categories = ['Electronics', 'Clothing', 'Books', 'Home', 'Sports', 'Toys'];
+  const renderLoadingAndError = () => {
+    if (loadingProduct || loadingCreate || loadingUpdate || loadingUpload) {
+      return currentTheme === 'bootstrap' ? <Loading /> : <MuiLoading />;
+    }
+    if (errorProduct) {
+      const message =
+        errorProduct?.data?.message ||
+        errorProduct.error ||
+        'An Error Happened';
+      return currentTheme === 'bootstrap' ? (
+        <Message variant="danger">{message}</Message>
+      ) : (
+        <MuiMessage severity="danger">{message}</MuiMessage>
+      );
+    }
+    return null;
+  };
+
+  const categories = [
+    'Electronics',
+    'Clothing',
+    'Books',
+    'Home',
+    'Sports',
+    'Toys',
+  ];
   const brands = ['Apple', 'Samsung', 'Nike', 'Sony', 'Dell', 'Canon'];
 
   useEffect(() => {
@@ -134,7 +166,113 @@ const ProductFormScreen = () => {
   if (loadingProduct) {
     return <MuiLoading message="Loading product details..." />;
   }
+  const loadingOrErrorComponent = renderLoadingAndError();
+  if (loadingOrErrorComponent) {
+    return loadingOrErrorComponent;
+  }
+  if (currentTheme === 'bootstrap') {
+    return (
+      <FormContainer>
+        <Button variant="light" className="my-3" onClick={goBackHandler}>
+          Go Back
+        </Button>
+        <h1>{isEditMode ? 'Edit Product' : 'Create Product'}</h1>
 
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="my-2" controlId="name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Product Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="price">
+            <Form.Label>Price</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Product Price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="image">
+            <Form.Label>Image URL</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Image URL"
+              name="image"
+              value={formData.image}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="brand">
+            <Form.Label>Brand</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Brand Name"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="countInStock">
+            <Form.Label>countInStock</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="countInStock"
+              name="countInStock"
+              value={formData.countInStock}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="category">
+            <Form.Label>category</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="description">
+            <Form.Label>description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={5}
+              placeholder="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Button
+            type="submit"
+            variant="primary"
+            className="mt-3"
+            disabled={loadingCreate || loadingUpdate}
+          >
+            {loadingCreate || loadingUpdate
+              ? 'SAVING...'
+              : isEditMode
+              ? 'Update Product'
+              : 'Create Product'}
+          </Button>
+        </Form>
+      </FormContainer>
+    );
+  }
   return (
     <MuiContainer maxWidth="lg" sx={{ py: 4 }}>
       {/* Header */}
@@ -150,7 +288,11 @@ const ProductFormScreen = () => {
           overflow: 'hidden',
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Stack direction="row" alignItems="center" spacing={2}>
             <Box
               sx={{
@@ -166,12 +308,14 @@ const ProductFormScreen = () => {
                 {isEditMode ? 'Edit Product' : 'Create Product'}
               </Typography>
               <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                {isEditMode ? 'Update product information' : 'Add a new product to your store'}
+                {isEditMode
+                  ? 'Update product information'
+                  : 'Add a new product to your store'}
               </Typography>
             </Box>
           </Stack>
 
-          <Button
+          <MuiButton
             variant="contained"
             startIcon={<BackIcon />}
             onClick={goBackHandler}
@@ -185,23 +329,9 @@ const ProductFormScreen = () => {
             }}
           >
             Go Back
-          </Button>
+          </MuiButton>
         </Stack>
       </Paper>
-
-      {/* Loading States */}
-      {(loadingCreate || loadingUpdate || loadingUpload) && (
-        <Box sx={{ mb: 3 }}>
-          <LinearProgress />
-        </Box>
-      )}
-
-      {/* Error Message */}
-      {errorProduct && (
-        <MuiMessage severity="danger">
-          {errorProduct?.data?.message || 'An Error Happened'}
-        </MuiMessage>
-      )}
 
       {/* Form */}
       <Card
@@ -228,8 +358,8 @@ const ProductFormScreen = () => {
                       border: `2px dashed ${theme.palette.divider}`,
                     }}
                   />
-                  
-                  <Button
+
+                  <MuiButton
                     variant="outlined"
                     component="label"
                     startIcon={<UploadIcon />}
@@ -243,7 +373,7 @@ const ProductFormScreen = () => {
                       accept="image/*"
                       onChange={uploadFileHandler}
                     />
-                  </Button>
+                  </MuiButton>
                 </Stack>
               </Grid>
 
@@ -288,15 +418,19 @@ const ProductFormScreen = () => {
 
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <InputLabel>Brand *</InputLabel>
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel shrink>Brand *</InputLabel>
                         <Select
                           name="brand"
                           value={formData.brand}
                           onChange={handleChange}
                           label="Brand *"
+                          displayEmpty // این پراپرتی به نمایش صحیح placeholder کمک می‌کند
                           sx={{ borderRadius: 2 }}
                         >
+                          <MenuItem value="" disabled>
+                            Select Brand
+                          </MenuItem>
                           {brands.map((brand) => (
                             <MenuItem key={brand} value={brand}>
                               {brand}
@@ -306,15 +440,19 @@ const ProductFormScreen = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <InputLabel>Category *</InputLabel>
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel shrink>Category *</InputLabel>
                         <Select
                           name="category"
                           value={formData.category}
                           onChange={handleChange}
                           label="Category *"
+                          displayEmpty 
                           sx={{ borderRadius: 2 }}
                         >
+                          <MenuItem value="" disabled>
+                            Select Category
+                          </MenuItem>
                           {categories.map((category) => (
                             <MenuItem key={category} value={category}>
                               {category}
@@ -324,7 +462,6 @@ const ProductFormScreen = () => {
                       </FormControl>
                     </Grid>
                   </Grid>
-
                   <TextField
                     fullWidth
                     multiline
@@ -336,7 +473,7 @@ const ProductFormScreen = () => {
                     sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
                   />
 
-                  <Button
+                  <MuiButton
                     type="submit"
                     fullWidth
                     variant="contained"
@@ -361,7 +498,7 @@ const ProductFormScreen = () => {
                       : isEditMode
                       ? 'Update Product'
                       : 'Create Product'}
-                  </Button>
+                  </MuiButton>
                 </Stack>
               </Grid>
             </Grid>
